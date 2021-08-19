@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,7 @@ import telran.java38.user.service.AccountService;
 
 @RestController
 @RequestMapping("/account")
+@CrossOrigin(origins = "*")
 public class AccountManagmentController {
 
 	AccountService accountService;
@@ -41,16 +44,19 @@ public class AccountManagmentController {
 	}
 
 	@PutMapping("/{login}")
+	//@PreAuthorize("#login == authentication.name")
 	public UserProfileDto updateUser(@PathVariable String login, @RequestBody UserUpdateDto userUpdateDto) {
 		return accountService.updateUser(login, userUpdateDto);
 	}
 
 	@DeleteMapping("/{login}")
+	//@PreAuthorize("#login == authentication.name or hasRole('ADMINISTRATOR')")
 	public UserProfileDto removeUser(@PathVariable String login) {
 		return accountService.removeUser(login);
 	}
 
 	@PutMapping("/{login}/password")
+	//@PreAuthorize("#login == authentication.name")
 	public void updateUser(@PathVariable String login, @RequestBody UserPasswordDto userPasswordDto) {
 		accountService.changePassword(login, userPasswordDto.getPassword());
 	}

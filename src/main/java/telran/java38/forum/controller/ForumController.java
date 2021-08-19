@@ -1,6 +1,7 @@
 package telran.java38.forum.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import telran.java38.forum.service.ForumService;
 
 @RestController
 @RequestMapping("/forum")
+@CrossOrigin(origins = "*")
 public class ForumController {
 	@Autowired
 	ForumService service;
