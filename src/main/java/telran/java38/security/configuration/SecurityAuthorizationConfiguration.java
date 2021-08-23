@@ -1,5 +1,6 @@
 package telran.java38.security.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,11 +8,17 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import telran.java38.security.service.ExpiredPasswordFilter;
 
 //@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityAuthorizationConfiguration extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	ExpiredPasswordFilter expiredPasswordFilter;
 	
 	@Override
 	public void configure(WebSecurity web) {
@@ -25,6 +32,7 @@ public class SecurityAuthorizationConfiguration extends WebSecurityConfigurerAda
 		http.cors();
 		http.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterAfter(expiredPasswordFilter, BasicAuthenticationFilter.class);
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.GET, "/forum/post/{id}/**")
 				.permitAll()
